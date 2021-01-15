@@ -1,58 +1,88 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useEffect } from 'react';
 import './App.css';
+import Header from './component/Header/Header';
+import Sidebar from "./component/body/sidebar/Sidebar"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Mail from './component/body/mail/Mail';
+import EmailList from './component/body/emailList/EmailList';
+import SendMail from "./component/body/sendmail/SendMail"
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSendMessageIsOpen } from './features/mailSlice';
+import { login, logout, selectUser } from './features/userSlice';
+import Login from './component/login/Login';
+import { auth } from './firebase';
 
-function App() {
+
+function App ()
+{
+  // get the data of s
+  const sendMessageIsOpen = useSelector(selectSendMessageIsOpen)
+
+  const user = useSelector( selectUser )
+  const dispatch = useDispatch()
+
+  useEffect( () =>
+  {
+    auth.onAuthStateChanged( user =>
+    {
+      if ( user )
+      {
+        // user is logged in
+        dispatch( login( {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoUrl: user.photoURL,
+        }))
+      } else
+      {
+        dispatch(logout())
+      }
+    })
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Router> 
+      {!user ? ( <Login /> )
+        : (
+          
+           <div className="app">
+        
+        
+            {/* header  */ }
+            <Header />
+        
+
+
+            {/* body  */ }
+            <div className="app__body">
+          <Sidebar />
+          
+          <Switch>
+                <Route path="/mail">
+                  <Mail />
+                 </Route>
+            
+                <Route path="/">
+                  <EmailList />
+                </Route>
+          </Switch>
+          
+        </div>
+        
+        {/* is the send message is open render the SendMail, (BECAUSE BE DEFAULT THE SEND MESSAGE IS OPEN IS SET TO FALSE) */}
+        {sendMessageIsOpen && <SendMail /> }
+        </div>
+      )}
+       
+    </Router>
   );
 }
 
 export default App;
+
+// react router https://reactrouter.com/web/guides/quick-start

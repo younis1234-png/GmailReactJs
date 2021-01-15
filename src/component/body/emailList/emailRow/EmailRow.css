@@ -1,0 +1,50 @@
+.emailRow{
+/* margin-top: 10px; */
+display: flex;
+align-items: center;
+height: 50px;
+border-bottom:1px solid whitesmoke;
+cursor: pointer;
+z-index: 999;
+transition: all 0.2s ease;
+outline: none;
+}
+.emailRow:hover{
+    border-top:1px solid whitesmoke;
+    box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.24);
+    outline: none;
+}
+.emailRow_option{
+display: flex;
+align-items: center;
+}
+.emailRow_title{
+font-size: 13px;
+flex: 0.3;
+
+}
+.emailRow_message{
+display: flex;
+flex: 0.8;
+align-items: center;
+font-size: 9px;
+}
+.emailRow_message >h4{
+width: 400px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+.emailRow_time{
+padding-right: 15px;
+font-size: 9px;
+font-weight: bold;
+}
+.emailRow_description{
+    font-weight: 400;
+    color: gray;
+    
+}
